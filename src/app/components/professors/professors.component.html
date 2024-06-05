@@ -1,0 +1,165 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Liste des Produits présentent dans le stock</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#professorModal"
+        >
+          Ajouter un produit
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Rechercher un professeur"
+            aria-label="Rechercher un professeur"
+            aria-describedby="button-addon2"
+            (change)="handleSearch($event)"
+            onchange="console.log('change')"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="professors d-flex justify-content-center align-items-center"
+        style="overflow-x: auto; width: 100%"
+      >
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th *ngFor="let column of displayedColumns">{{ column }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let professor of companiesList">
+              <td>{{ professor.id }}</td>
+              <td>{{ professor.nom }}</td>
+              <td>{{ professor.etat_physique }}</td>
+              <td>
+                <div class="d-flex justify-content-around">
+                  <a
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#professorModal"
+                    (click)="handleUpdateCompany(professor)"
+                  >
+                    <i class="bi bi-pencil-square text-primary"></i>
+                  </a>
+                  <a
+                    type="button"
+                    (click)="deleteCompany(professor.id)"
+                  >
+                    <i class="bi bi-trash text-danger"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="professorModal"
+  tabindex="-1"
+  aria-labelledby="professorModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="professorModalLabel">
+          Ajouter un professeur
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="row g-3"
+          [formGroup]="internshipForm"
+          (ngSubmit)="handleCompanyForm()"
+        >
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="id">id</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="id"
+                  placeholder="id"
+                  formControlName="id"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="nom">Nom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nom"
+                  placeholder="Nom de produit"
+                  formControlName="nom"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="legalForm">Etat physique</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="legalForm"
+                  placeholder="Etat physique"
+                  formControlName="etat_physique"
+                  required
+                />
+              </div>
+
+            </div>
+          </div>
+          <button
+            *ngIf="!editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="internshipForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Ajouter
+          </button>
+          <button
+            *ngIf="editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="internshipForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Modifier
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

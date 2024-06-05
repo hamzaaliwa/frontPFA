@@ -1,0 +1,192 @@
+<div class="d-flex" style="height: 100vh">
+  <app-navbar></app-navbar>
+  <div class="d-flex flex-column" style="overflow: auto; width: 100%">
+    <div class="container p-lg-5 p-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Entropot N : {{entropotId}}</h1>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#entrepriseModal"
+        >
+          Ajouter un produit
+        </button>
+      </div>
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="input-group mb-3">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Rechercher un produit"
+            aria-label="Rechercher un produit"
+            aria-describedby="button-addon2"
+            (input)="handleSearch($event)"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2"
+          >
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </div>
+      <div
+        class="entreprises d-flex justify-content-center align-items-center"
+        style="overflow-x: auto; width: 100%"
+      >
+        <table class="table table-striped table-hover ms-5">
+          <thead>
+          <tr>
+            <th *ngFor="let column of displayedColumns">{{ column }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let company of companiesList">
+            <td>{{ company.id }}</td>
+            <td>{{ company.produit.id }}</td>
+            <td>{{ company.quantite }}</td>
+            <td>{{ company.seuil_max }}</td>
+            <td>{{ company.seuil_min }}</td>
+            <td>
+              <div class="d-flex justify-content-around">
+                <a
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#entrepriseModal"
+                  (click)="handleUpdateCompany(company)"
+                >
+                  <i class="bi bi-pencil-square text-primary"></i>
+                </a>
+                <a type="button" (click)="deleteCompany(company.id)">
+                  <i class="bi bi-trash text-danger"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="entrepriseModal"
+  tabindex="-1"
+  aria-labelledby="entrepriseModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-secondary text-white">
+        <h5 class="modal-title" id="entrepriseModalLabel">
+          {{ editMode ? "Modifier une entreprise" : "Ajouter une entreprise" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="companyForm" (ngSubmit)="handleCompanyForm()">
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <div class="form-group mb-3">
+                <label for="siretNumber">id</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="id"
+                  placeholder="id"
+                  formControlName="id"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3" formGroupName="produit">
+                <label for="prod">produit</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="prod"
+                  placeholder="id de produit"
+                  formControlName="id"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3" formGroupName="entropot">
+                <label for="siretNumber">Entropôt</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="siretNumber"
+                  placeholder="id de l'entropot"
+                  formControlName="id"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="legalForm">Quantité</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="legalForm"
+                  placeholder="Quantité"
+                  formControlName="quantite"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="businessName">Seuil max de produit</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="businessName"
+                  placeholder="seuil max"
+                  formControlName="seuil_max"
+                  required
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="address">Seuil min de produit</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="address"
+                  placeholder="seuil min"
+                  formControlName="seuil_min"
+                  required
+                />
+              </div>
+
+            </div>
+          </div>
+          <button
+            *ngIf="!editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="companyForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Ajouter
+          </button>
+          <button
+            *ngIf="editMode"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="companyForm.invalid"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Modifier
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
